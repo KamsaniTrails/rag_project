@@ -1,0 +1,105 @@
+* { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f5f6fa;
+  margin: 0;
+}
+
+.app {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.app h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #1f3864;
+}
+
+.file-upload__label {
+  display: block;
+  border: 2px dashed #c7cbe0;
+  border-radius: 10px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  color: #444;
+}
+
+.file-upload__label input { display: none; }
+
+.file-upload__error { color: #c0392b; margin-top: 8px; }
+
+.chat-window__header {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.chat-window__messages {
+  min-height: 320px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message--user { align-self: flex-end; text-align: right; }
+.message--assistant { align-self: flex-start; }
+
+.message__bubble {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 12px;
+  max-width: 85%;
+}
+
+.message--user .message__bubble { background: #1f3864; color: #fff; }
+.message--assistant .message__bubble { background: #eef1f8; color: #222; }
+
+.message__sources {
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.message__source-chip {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.06);
+}
+
+.chat-window__typing { font-size: 13px; color: #888; }
+
+.chat-window__input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.chat-window__input-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d5d8e3;
+}
+
+.chat-window__input-row button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #1f3864;
+  color: #fff;
+  cursor: pointer;
+}
+
+.chat-window__input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
