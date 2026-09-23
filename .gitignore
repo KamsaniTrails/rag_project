@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment and secrets
+.env
+**/.env
+*.env.local
+
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Build artifacts
+build/
+**/build/
+dist/
+**/dist/
+
+# Logs and system
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db

@@ -14,16 +14,16 @@ Upload (PDF/TXT)
 Text extraction → Chunking (LangChain text splitter)
       │
       ▼
-Embeddings (OpenAI text-embedding-3-small)
+Embeddings (Google text-embedding-004)
       │
       ▼
-Vector storage (Pinecone, namespaced per document)
+Vector storage (Pinecone, 768 dims, namespaced per document)
       │
       ▼
 User question → Embed query → Similarity search (top-K chunks)
       │
       ▼
-LangChain prompt template → OpenAI chat model (gpt-4o-mini)
+LangChain prompt template → Google Gemini (gemini-1.5-flash)
       │
       ▼
 Answer + source citations → saved to MongoDB chat history → returned to UI
@@ -33,7 +33,7 @@ Answer + source citations → saved to MongoDB chat history → returned to UI
 
 - **Frontend:** React.js, Axios
 - **Backend:** Node.js, Express.js, JWT auth, Multer (file upload)
-- **AI/RAG:** LangChain, OpenAI API (embeddings + chat), Pinecone (vector DB)
+- **AI/RAG:** LangChain, Google Gemini API (free text-embedding-004 + gemini-1.5-flash), Pinecone (vector DB)
 - **Database:** MongoDB (Mongoose) for document metadata + chat history
 
 ## Features

@@ -1,4 +1,4 @@
-const { OpenAIEmbeddings, ChatOpenAI } = require("@langchain/openai");
+const { GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI } = require("@langchain/google-genai");
 const { PromptTemplate } = require("@langchain/core/prompts");
 const { StringOutputParser } = require("@langchain/core/output_parsers");
 const {
@@ -6,16 +6,19 @@ const {
   RunnablePassthrough,
 } = require("@langchain/core/runnables");
 const { getPineconeIndex } = require("../config/pinecone");
+const { withRetry } = require("../utils/retry");
 
-const embeddings = new OpenAIEmbeddings({
-  openAIApiKey: process.env.OPENAI_API_KEY,
-  modelName: "text-embedding-3-small",
+const embeddings = new GoogleGenerativeAIEmbeddings({
+  apiKey: process.env.GOOGLE_API_KEY,
+  modelName: "gemini-embedding-001",
+  maxRetries: 2,
 });
 
-const chatModel = new ChatOpenAI({
-  openAIApiKey: process.env.OPENAI_API_KEY,
-  modelName: "gpt-4o-mini",
+const chatModel = new ChatGoogleGenerativeAI({
+  apiKey: process.env.GOOGLE_API_KEY,
+  modelName: "gemini-3.6-flash",
   temperature: 0.2,
+  maxRetries: 2,
 });
 
 const RAG_PROMPT = PromptTemplate.fromTemplate(`
@@ -37,7 +40,10 @@ Give a clear, concise answer. Cite the chunk numbers you used, e.g. [chunk 2].
  */
 async function retrieveContext(documentId, query, topK = 5) {
   const index = getPineconeIndex();
-  const [queryVector] = await embeddings.embedDocuments([query]);
+  // embedQuery is the correct single-string call (embedDocuments is for
+  // batches of documents); wrapped in withRetry so a transient 429 here
+  // doesn't fail the whole question.
+  const queryVector = await withRetry(() => embeddings.embedQuery(query));
 
   const results = await index.namespace(documentId).query({
     vector: queryVector,
@@ -60,14 +66,14 @@ async function retrieveContext(documentId, query, topK = 5) {
  */
 async function answerQuestion(documentId, question) {
   const { context, sources } = await retrieveContext(documentId, question);
-
+  //LLM 
   const chain = RunnableSequence.from([
     RAG_PROMPT,
     chatModel,
     new StringOutputParser(),
   ]);
 
-  const answer = await chain.invoke({ context, question });
+  const answer = await withRetry(() => chain.invoke({ context, question }));
 
   return { answer, sources };
 }
